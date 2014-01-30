@@ -1,4 +1,3 @@
-console.log('foo');
 var EventEmitter = require('events').EventEmitter
 var inherits = require('util').inherits
 
@@ -129,15 +128,9 @@ window.onYouTubeIframeAPIReady = function () {
     waiting.shift()()
 } 
 
-//this is from http://www.youtube.com/player_api
-//gonna inline it here to save a request.
-setTimeout(function () {
- if (!YT.Player) {
-    (function () {
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    })()
-  }
-}, 1)
+// This code loads the IFrame Player API code asynchronously.
+// https://developers.google.com/youtube/iframe_api_reference#Getting_Started
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);

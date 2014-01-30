@@ -148,29 +148,11 @@ window.onYouTubeIframeAPIReady = function () {
     waiting.shift()()
 } 
 
-//this is from http://www.youtube.com/player_api
-//gonna inline it here to save a request.
-setTimeout(function () {
- if (!YT.Player) {
-     console.log('here!');
-    (function () {
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-      // var p = document.location.protocol == 'https:' ? 'https:' : 'http:'
-      // var s = p + '//s.ytimg.com/yt/jsbin/www-widgetapi-vflCAfh6H.js'
-      // var a = document.createElement('script')
-      // a.src = s
-      // a.async = true
-      // document.head.insertBefore(a, document.head.firstElementChild)
-      // YT.embed_template = 
-      //   "\u003ciframe width=\"425\" height=\"344\" src=\"\"" + 
-      //   "frameborder=\"0\" allowfullscreen\u003e\u003c\/iframe\u003e"
-    })()
-  }
-}, 1)
+//this is from https://developers.google.com/youtube/iframe_api_reference#Getting_Started
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 },{"events":3,"util":7}],3:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
