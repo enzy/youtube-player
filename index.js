@@ -1,3 +1,4 @@
+console.log('foo');
 var EventEmitter = require('events').EventEmitter
 var inherits = require('util').inherits
 
@@ -122,7 +123,7 @@ map('setVolume')
 map('getVolume')
 
 //global listener... sorry. this is youtube.
-window.onYouTubePlayerAPIReady = function () {
+window.onYouTubeIframeAPIReady = function () {
   ready = true
   while(waiting.length)
     waiting.shift()()
@@ -133,15 +134,10 @@ window.onYouTubePlayerAPIReady = function () {
 setTimeout(function () {
  if (!YT.Player) {
     (function () {
-      var p = document.location.protocol == 'https:' ? 'https:' : 'http:'
-      var s = p + '//s.ytimg.com/yt/jsbin/www-widgetapi-vflCAfh6H.js'
-      var a = document.createElement('script')
-      a.src = s
-      a.async = true
-      document.head.insertBefore(a, document.head.firstElementChild)
-      YT.embed_template = 
-        "\u003ciframe width=\"425\" height=\"344\" src=\"\"" + 
-        "frameborder=\"0\" allowfullscreen\u003e\u003c\/iframe\u003e"
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     })()
   }
 }, 1)
