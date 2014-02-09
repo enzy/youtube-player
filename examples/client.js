@@ -11,6 +11,13 @@ p.play('wusGIl3v044')
 p.on('end', function () {
   console.log('THE END')
 })
+
 p.on('ready', function (state) {
   console.log('EVENT')
 })
+
+p.on('playing', function (time) {
+  console.log(time)
+})
+
+
