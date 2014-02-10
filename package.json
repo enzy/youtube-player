@@ -1,13 +1,13 @@
 {
   "name": "youtube-player",
-  "version": "0.1.5",
-  "description": "add a youtube player to webpage, in browserifyerable module",
-  "homepage": "http://github.com/dominictarr/youtube-player",
+  "version": "0.0.1",
+  "description": "control youtube player",
+  "homepage": "http://github.com/oren/youtube-player",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dominictarr/youtube-player.git"
+    "url": "https://github.com/oren/youtube-player.git"
   },
   "dependencies": {},
   "devDependencies": {},
-  "author": "Dominic Tarr <dominic.tarr@gmail.com> (dominictarr.com)"
+  "author": "oren"
 }
