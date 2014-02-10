@@ -6,14 +6,12 @@ p.on('change', function (state) {
   console.log('change', state, Object.keys(p.player))
 })
 
-p.play('wusGIl3v044')
-
 p.on('end', function () {
   console.log('THE END')
 })
 
 p.on('ready', function (state) {
-  console.log('EVENT')
+  p.play('wusGIl3v044')
 })
 
 p.on('playing', function (time) {

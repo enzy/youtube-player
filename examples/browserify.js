@@ -984,14 +984,12 @@ p.on('change', function (state) {
   console.log('change', state, Object.keys(p.player))
 })
 
-p.play('wusGIl3v044')
-
 p.on('end', function () {
   console.log('THE END')
 })
 
 p.on('ready', function (state) {
-  console.log('EVENT')
+  p.play('wusGIl3v044')
 })
 
 p.on('playing', function (time) {
@@ -1006,66 +1004,32 @@ var inherits = require('util').inherits;
 
 module.exports = YouTubePlayer;
 
-var waiting = [];
-var ready = false;
 var timer = null;
+var globalCreate = null;
 
 inherits(YouTubePlayer, EventEmitter);
 
-  if (!window.YT)
-    window.YT = {};
- 
-/*
-{ id // element id
-, width
-, height
-// initial video?
-*/
+if (!window.YT) { window.YT = {}; }
 
 var states = ['ready', 'end', 'play', 'pause', 'buffer', 'cue'];
 
-
 function YouTubePlayer (options) {
-  var self = this, player, isPolling;
-  this.ready = false;
+  var self = this, player;
+
   options.events = {
     onStateChange: function (state) {
       state = states[state.data + 1];
-
-      /*
-        this is really weird, but the first time that youtube
-        emits ready, it's not actually ready.
-        it hasn't added all the methods yet.
-
-        I don't know exactly when it will be ready,
-        so I've gotta poll for that.
-      */
-
-
-      if (!self.ready && !isPolling) {
-        pollReady();
-      }
-      self.emit(state);
-      self.emit('change', state);
-      self.emit('playing', self.player.getCurrentTime());
-
       if (state === 'play') {
         emitTime();
       } else {
-        clearInterval(timer);
+       clearInterval(timer);
       }
+    },
 
-    },
     onReady: function() {
-      /*
-        sometimes only onReady and not the the initial
-        ready onStateChange is fired. so should
-        poll here too
-      */
-      if (!self.ready && !isPolling) {
-        pollReady();
-      }
+      self.emit('ready');
     },
+
     onError: function (code) {
       var message = ({
         '2': 'invalid parameter',
@@ -1077,39 +1041,21 @@ function YouTubePlayer (options) {
     }
   };
 
-  function pollReady() {
-    if(!self.player.loadVideoById) {
-      isPolling = true;
-      setTimeout(pollReady, 1);
-      return;
-    }
-
-    isPolling = false;
-
-    if(!self.ready) {
-      self.ready = true;
-      self.emit('ready');
-      if(self.waiting)
-        self.play.apply(self, self.waiting);
-    }
-  }
-
   function create() {
     self.player = new YT.Player(options.id, options);
   }
+
+  globalCreate = create;
 
   function emitTime() {
     timer = setInterval(function () {
       self.emit('playing', self.player.getCurrentTime());
     }, 800);
   }
-
-  if(!ready)
-    waiting.push(create);
 }
 
 function map(a, b) {
-  YouTubePlayer.prototype[a] = 
+  YouTubePlayer.prototype[a] =
   'function' == typeof b ? b : function () {
     var args = [].slice.call(arguments);
     if('function' === typeof this.player[b])
@@ -1118,11 +1064,7 @@ function map(a, b) {
 }
 
 map('play', function (id, seconds, quality) {
-  var args = [].slice.call(arguments), self = this;
-  if(!this.ready)
-    this.waiting = args;
-  else
-    this.player.loadVideoById(id, seconds, quality);
+  this.player.loadVideoById(id, seconds, quality);
 });
 
 map('start'    , 'playVideo');
@@ -1141,9 +1083,7 @@ map('getVolume');
 
 //global listener... sorry. this is youtube.
 window.onYouTubeIframeAPIReady = function () {
-  ready = true;
-  while(waiting.length)
-    waiting.shift()();
+  globalCreate();
 };
 
 // This code loads the IFrame Player API code asynchronously.
